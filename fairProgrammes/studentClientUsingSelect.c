@@ -1,11 +1,6 @@
 /** CHANGES
  * 
- * ADDED UPDATE OPTION
- * REMOVED memset()
- * FUNCTIONS FOR FRAME CREATION REPLACED WITH snprintf()
- * ADDED ERROR HANDLING AT send() and receive()
- * OPTIMIZED MAX_NAME_LEN AND FINAL_DATA_BUFFER_SIZE
- * Added enum as a reference for each case (operation to be performed)
+ * ADDDED CLIENT ID 
  *  
 */
 

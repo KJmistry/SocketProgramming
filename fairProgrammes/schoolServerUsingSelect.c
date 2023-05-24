@@ -150,7 +150,7 @@ int addData(char *str, struct dataBase* listPtr[MAX_CONNECTIONS][MAX_ENTRY], int
         printf(CYAN "NAME : %s\n", ((listPtr[clientID][i]))->studentName);
         printf(CYAN "ROLL NUMBER : %d\n", ((listPtr[clientID][i]))->rollNumber);
     }
-    printf(GREEN "####################################################################\n" WHITE);
+    printf(GREEN "#####################################################################################\n" WHITE);
 
     return 0;
 }
@@ -241,7 +241,7 @@ int updateData(char *str, struct dataBase* listPtr[MAX_CONNECTIONS][MAX_ENTRY], 
         printf(CYAN "NAME : %s\n", listPtr[clientID][i]->studentName);
         printf(CYAN "ROLL NUMBER : %d\n", listPtr[clientID][i]->rollNumber);
     }
-    printf(GREEN "####################################################################\n" WHITE);
+    printf(GREEN "#####################################################################################\n" WHITE);
     
     return 0;
 }
@@ -280,7 +280,7 @@ int deleteEntry(int rollNumber, struct dataBase * listPtr[MAX_CONNECTIONS][MAX_E
         printf(CYAN "NAME : %s\n", listPtr[clientID][i]->studentName);
         printf(CYAN "ROLL NUMBER : %d\n", listPtr[clientID][i]->rollNumber);
     }
-    printf(GREEN "####################################################################\n" WHITE);
+    printf(GREEN "####################################################################################\n" WHITE);
     return 0;
 }
 
@@ -293,7 +293,7 @@ int sendMessage(char *message, int fd)
 {
     char tBuffer[TEMP_STRING_SIZE] = {0};
     snprintf(tBuffer, TEMP_STRING_SIZE, "%s", message);
-    return send(fd, tBuffer, 30, 0);
+    return send(fd, tBuffer, 50, 0);
     // return send(fd, tBuffer, strlen(message) + 1, 0);
 }
 
@@ -365,6 +365,9 @@ int main(void)
 
             if (fdArray[index] >= 0)
                 FD_SET(fdArray[index], &readFdSet);
+            
+            if(fdArray[index] > maxFd)
+                maxFd = fdArray[index];
         }
 
         if (select(maxFd + 1, &readFdSet, NULL, NULL, NULL) <= 0)
@@ -396,19 +399,12 @@ int main(void)
                 receivedString[strlen(receivedString)] = 0;
                 printf("Received string from client : %s\n", receivedString);
 
-                // if (strcmp(receivedString, "close") == 0)
-                // {   
-                //     // closing the connected socket
-                //     close(newSocket);
-
-                //     // waiting for student client again
-                //     if ((newSocket = accept(masterFd, (struct sockaddr *)&clientAddress, (socklen_t *)&client_addrlen)) < 0)     
-                //     {
-                //         printf("error at accept : %s\n", strerror(errno));
-                //         exit(EXIT_FAILURE);
-                //     }
-                //     continue;
-                // }
+                if (strcmp(receivedString, "close") == 0)
+                {   
+                    // closing the connected socket
+                    close(fdArray[index]);              
+                    continue;
+                }
 
                 clientID = receivedString[0] - '0';
 
